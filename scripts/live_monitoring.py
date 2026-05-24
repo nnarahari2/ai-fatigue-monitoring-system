@@ -2,6 +2,25 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from scipy.spatial import distance
+import threading
+import os
+
+# ---------------------------------------------------
+# Audio Alert Function
+# ---------------------------------------------------
+alarm_playing = False
+
+def play_alarm():
+
+    global alarm_playing
+
+    if not alarm_playing:
+
+        alarm_playing = True
+
+        os.system('afplay alert.wav')
+
+        alarm_playing = False
 
 # ---------------------------------------------------
 # Eye Aspect Ratio (EAR) Calculation
@@ -212,8 +231,12 @@ while True:
                     3
                 )
 
-            # Fatigue warning
+            # ---------------------------------------------------
+            # Fatigue Warning
+            # ---------------------------------------------------
             if fatigue_status != "":
+
+                threading.Thread(target=play_alarm).start()
 
                 cv2.putText(
                     frame,
@@ -225,8 +248,12 @@ while True:
                     3
                 )
 
-            # Distraction warning
+            # ---------------------------------------------------
+            # Distraction Warning
+            # ---------------------------------------------------
             if distraction_status != "":
+
+                threading.Thread(target=play_alarm).start()
 
                 cv2.putText(
                     frame,
