@@ -15,21 +15,18 @@ face_mesh = mp_face_mesh.FaceMesh(
 # Drawing utilities
 mp_drawing = mp.solutions.drawing_utils
 
-# Try different camera indexes for MacBooks
+# Eye landmark indices
+LEFT_EYE = [33, 160, 158, 133, 153, 144]
+RIGHT_EYE = [362, 385, 387, 263, 373, 380]
+
+# Open webcam
 cap = cv2.VideoCapture(1)
 
-# If camera 1 fails, try camera 0
 if not cap.isOpened():
     cap = cv2.VideoCapture(0)
 
-# If still fails, try camera 2
 if not cap.isOpened():
     cap = cv2.VideoCapture(2)
-
-# Final check
-if not cap.isOpened():
-    print("ERROR: Could not open any camera.")
-    exit()
 
 while True:
     ret, frame = cap.read()
@@ -38,19 +35,18 @@ while True:
         print("Failed to grab frame")
         break
 
-    # Flip webcam horizontally
     frame = cv2.flip(frame, 1)
 
-    # Convert BGR to RGB
     rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-    # Process frame
     results = face_mesh.process(rgb_frame)
 
-    # Draw landmarks if face detected
+    frame_height, frame_width, _ = frame.shape
+
     if results.multi_face_landmarks:
         for face_landmarks in results.multi_face_landmarks:
 
+            # Draw full face mesh
             mp_drawing.draw_landmarks(
                 image=frame,
                 landmark_list=face_landmarks,
@@ -63,7 +59,20 @@ while True:
                 )
             )
 
-            # Display status text
+            # Draw left eye points
+            for idx in LEFT_EYE:
+                x = int(face_landmarks.landmark[idx].x * frame_width)
+                y = int(face_landmarks.landmark[idx].y * frame_height)
+
+                cv2.circle(frame, (x, y), 2, (255, 0, 0), -1)
+
+            # Draw right eye points
+            for idx in RIGHT_EYE:
+                x = int(face_landmarks.landmark[idx].x * frame_width)
+                y = int(face_landmarks.landmark[idx].y * frame_height)
+
+                cv2.circle(frame, (x, y), 2, (0, 0, 255), -1)
+
             cv2.putText(
                 frame,
                 "Face Detected",
@@ -74,13 +83,10 @@ while True:
                 2
             )
 
-    # Show webcam window
     cv2.imshow("AI Fatigue Monitoring System", frame)
 
-    # Press q to quit
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Cleanup
 cap.release()
 cv2.destroyAllWindows()
