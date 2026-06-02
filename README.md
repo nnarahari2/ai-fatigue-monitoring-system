@@ -1,126 +1,127 @@
-# AI Fatigue + Distraction Monitoring System
+# AI Fatigue Monitoring System
 
 ## Overview
 
-The AI Fatigue + Distraction Monitoring System is a real-time computer vision platform designed to monitor driver attentiveness and detect potentially unsafe behavior through live facial perception and behavioral analysis.
+The AI Fatigue Monitoring System is a real-time computer vision application designed to monitor driver alertness using a webcam. The system detects signs of drowsiness and driver distraction by analyzing facial landmarks, eye movements, and head orientation.
 
-The system performs real-time webcam inference using MediaPipe Face Mesh, OpenCV, and geometric facial landmark analysis to identify signs of drowsiness and distraction. By combining Eye Aspect Ratio (EAR) fatigue estimation with head pose-based distraction monitoring, the platform generates live safety alerts capable of identifying prolonged eye closure and directional attention drift.
+The project uses OpenCV and MediaPipe Face Mesh to perform real-time facial landmark tracking and generates alerts when fatigue or distraction is detected.
 
-This project demonstrates the integration of real-time perception pipelines, human-centered AI monitoring, and intelligent safety analysis within a unified computer vision system.
-
----
-
-# Features
-
-- Real-time webcam inference pipeline
-- Facial landmark extraction using MediaPipe Face Mesh
-- Eye landmark tracking and geometric analysis
-- Eye Aspect Ratio (EAR)-based fatigue detection
-- Head pose estimation for distraction monitoring
-- Real-time driver attention analysis
-- Unified multimodal safety monitoring system
-- Live visual alert generation
-- Real-time facial mesh visualization
-- Modular computer vision architecture
+This project was developed to explore the use of computer vision and machine learning techniques for real-time driver safety monitoring and human attention analysis.
 
 ---
 
-# System Architecture
+## Features
 
-![System Architecture](results/system_architecture.png)
+### Face Tracking
+
+* Real-time facial landmark detection using MediaPipe Face Mesh
+* Continuous face monitoring through a webcam feed
+
+### Eye Landmark Tracking
+
+* Tracks key eye landmarks in real time
+* Calculates Eye Aspect Ratio (EAR) to estimate eye openness
+
+### Drowsiness Detection
+
+* Detects prolonged eye closure using EAR
+* Displays visual alerts when drowsiness is detected
+* Supports audio warning notifications
+
+### Distraction Detection
+
+* Estimates head orientation using facial landmarks
+* Detects when the driver looks away from the road
+* Generates distraction alerts in real time
+
+### Live Monitoring
+
+* Combines fatigue and distraction detection into a single monitoring system
+* Provides continuous driver status feedback
 
 ---
 
-# Demo Results
+## Technologies Used
 
-## Facial Landmark Tracking
-
-![Face Tracking](demo/face_tracking_demo.png)
-
----
-
-## Eye Landmark Tracking
-
-![Eye Tracking](demo/eye_landmark_tracking.png)
+* Python
+* OpenCV
+* MediaPipe Face Mesh
+* NumPy
+* SciPy
 
 ---
 
-## Drowsiness Detection
-
-![Drowsiness Detection](demo/drowsiness_detection_demo.png)
-
----
-
-## Distraction Detection
-
-![Distraction Detection](demo/distraction_detection.png)
-
----
-
-# System Pipeline
+## Project Structure
 
 ```text
-Webcam Input
-    ↓
-Face Detection
-    ↓
-MediaPipe Facial Landmark Tracking
-    ↓
-Eye Landmark Extraction + Head Pose Analysis
-    ↓
-EAR Fatigue Analysis + Distraction Monitoring
-    ↓
-Real-Time Safety Alert Generation
+AI-FATIGUE-MONITORING-SYSTEM
+│
+├── demo/
+│   ├── face_tracking_demo.png
+│   ├── eye_landmark_tracking.png
+│   ├── drowsiness_detection_demo.png
+│   └── distraction_detection.png
+│
+├── scripts/
+│   ├── webcam_test.py
+│   ├── fatigue_detection.py
+│   ├── distraction_detection.py
+│   └── live_monitoring.py
+│
+├── results/
+│
+├── alert.wav
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-# Technologies Used
+## Installation
 
-- Python
-- OpenCV
-- MediaPipe Face Mesh
-- NumPy
-- SciPy
-
----
-
-# Fatigue Detection Methodology
-
-The fatigue monitoring subsystem utilizes Eye Aspect Ratio (EAR) analysis to estimate eye openness over consecutive frames.
-
-EAR is computed using geometric distances between key eye landmarks extracted from MediaPipe Face Mesh. When the EAR value remains below a predefined threshold for multiple consecutive frames, the system classifies the behavior as potential drowsiness and generates a real-time fatigue alert.
-
-This approach enables lightweight, real-time fatigue estimation without requiring deep neural network inference.
-
----
-
-# Distraction Detection Methodology
-
-The distraction monitoring subsystem performs lightweight head pose estimation using geometric facial landmark relationships.
-
-The system estimates directional attention drift by comparing the nose landmark position relative to the horizontal facial centerline. Significant directional offsets are interpreted as attention deviation and classified as distraction events.
-
-The system is capable of detecting:
-
-- Looking left
-- Looking right
-- Attention drift
-- Forward attentive state
-
----
-
-# Installation
+Clone the repository:
 
 ```bash
-pip install opencv-python mediapipe numpy scipy
+git clone <repository-url>
+cd ai-fatigue-monitoring-system
+```
+
+Create and activate a virtual environment:
+
+```bash
+python3.11 -m venv venv
+source venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ---
 
-# Running the System
+## Running the Project
 
-## Unified Monitoring System
+### Webcam Test
+
+```bash
+python scripts/webcam_test.py
+```
+
+### Drowsiness Detection
+
+```bash
+python scripts/fatigue_detection.py
+```
+
+### Distraction Detection
+
+```bash
+python scripts/distraction_detection.py
+```
+
+### Live Monitoring System
 
 ```bash
 python scripts/live_monitoring.py
@@ -128,85 +129,38 @@ python scripts/live_monitoring.py
 
 ---
 
-## Fatigue Detection Module
+## Demo Results
 
-```bash
-python scripts/fatigue_detection.py
-```
+### Face Tracking
 
----
+![Face Tracking](demo/face_tracking_demo.png)
 
-## Distraction Detection Module
+### Eye Landmark Tracking
 
-```bash
-python scripts/distraction_detection.py
-```
+![Eye Landmark Tracking](demo/eye_landmark_tracking.png)
 
----
+### Drowsiness Detection
 
-# Repository Structure
+![Drowsiness Detection](demo/drowsiness_detection_demo.png)
 
-```text
-AI-FATIGUE-MONITORING-SYSTEM/
-│
-├── demo/
-│   ├── distraction_detection.png
-│   ├── drowsiness_detection_demo.png
-│   ├── eye_landmark_tracking.png
-│   └── face_tracking_demo.png
-│
-├── results/
-│   └── system_architecture.png
-│
-├── scripts/
-│   ├── distraction_detection.py
-│   ├── fatigue_detection.py
-│   ├── live_monitoring.py
-│   └── webcam_test.py
-│
-├── README.md
-└── .gitignore
-```
+### Distraction Detection
+
+![Distraction Detection](demo/distraction_detection.png)
 
 ---
 
-# Applications
+## Future Improvements
 
-This project aligns with several intelligent systems and real-time AI application domains, including:
-
-- Driver monitoring systems
-- Autonomous vehicle safety systems
-- Human attention analysis
-- Intelligent transportation systems
-- Robotics perception pipelines
-- Real-time human behavior monitoring
-- Computer vision safety applications
+* Event logging for fatigue and distraction incidents
+* Dataset collection and analysis
+* Machine learning classification models
+* Performance evaluation using accuracy, precision, and recall
+* Enhanced driver monitoring dashboard
 
 ---
 
-# Future Improvements
-
-- Audio-based warning systems
-- Mobile phone distraction detection
-- Deep learning-based gaze estimation
-- Fatigue analytics dashboard
-- Multi-person monitoring support
-- Temporal attention scoring
-- Driver behavior analytics
-- Edge-device deployment optimization
-
----
-
-# Author
+## Author
 
 Nitya Narahari
 
-Computer Science & Engineering — UC Merced
-
-Focused on:
-
-- Computer Vision
-- Intelligent Systems
-- Real-Time AI
-- Robotics Perception
-- Safety-Oriented AI Systems
+Computer Science and Engineering, University of California, Merced
