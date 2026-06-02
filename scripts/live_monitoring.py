@@ -4,6 +4,8 @@ import numpy as np
 from scipy.spatial import distance
 import threading
 import os
+import csv
+from datetime import datetime
 
 # ---------------------------------------------------
 # Audio Alert Function
@@ -21,6 +23,20 @@ def play_alarm():
         os.system('afplay alert.wav')
 
         alarm_playing = False
+
+# ---------------------------------------------------
+# Event Logging Function
+# ---------------------------------------------------
+def log_event(event):
+
+    with open(LOG_FILE, "a", newline="") as file:
+
+        writer = csv.writer(file)
+
+        writer.writerow([
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            event
+        ])
 
 # ---------------------------------------------------
 # Eye Aspect Ratio (EAR) Calculation
@@ -68,6 +84,23 @@ EAR_THRESHOLD = 0.20
 CLOSED_EYES_FRAMES = 15
 
 frame_counter = 0
+
+last_fatigue_state = False
+last_left_state = False
+last_right_state = False
+
+# ---------------------------------------------------
+# Event Logging Setup
+# ---------------------------------------------------
+LOG_FILE = "results/fatigue_log.csv"
+
+if not os.path.exists(LOG_FILE):
+
+    with open(LOG_FILE, "w", newline="") as file:
+
+        writer = csv.writer(file)
+
+        writer.writerow(["timestamp", "event"])
 
 # ---------------------------------------------------
 # Webcam Setup
@@ -177,8 +210,14 @@ while True:
 
                     fatigue_status = "DROWSINESS DETECTED"
 
+                    if not last_fatigue_state:
+
+                        log_event("drowsiness")
+                        last_fatigue_state = True
+
             else:
                 frame_counter = 0
+                last_fatigue_state = False
 
             # ---------------------------------------------------
             # Head Direction Detection
@@ -210,9 +249,28 @@ while True:
 
                 distraction_status = "LOOKING RIGHT"
 
+                if not last_right_state:
+
+                    log_event("looking_right")
+                    last_right_state = True
+
+                last_left_state = False
+
             elif direction_offset < -15:
 
                 distraction_status = "LOOKING LEFT"
+
+                if not last_left_state:
+
+                    log_event("looking_left")
+                    last_left_state = True
+
+                last_right_state = False
+
+            else:
+
+                last_left_state = False
+                last_right_state = False
 
             # ---------------------------------------------------
             # Display Status Messages
