@@ -4,7 +4,26 @@
 
 The AI Fatigue Monitoring System is a real-time computer vision and machine learning application designed to monitor driver alertness using a webcam. The system detects signs of drowsiness and driver distraction by analyzing facial landmarks, eye movements, and head orientation.
 
-The project uses OpenCV and MediaPipe Face Mesh for facial landmark tracking and includes machine learning models trained on a custom driver-state dataset.
+The project combines OpenCV, MediaPipe Face Mesh, and machine learning techniques to create a complete end-to-end driver monitoring pipeline, including data collection, feature engineering, model training, evaluation, and deployment.
+
+---
+
+## Key Results
+
+- Real-time facial landmark tracking using MediaPipe Face Mesh
+- Drowsiness detection using Eye Aspect Ratio (EAR)
+- Driver distraction detection using head orientation analysis
+- Custom dataset containing 204 labeled driver-state images
+- Landmark-based machine learning classifier
+- Random Forest model achieving **93.3% classification accuracy**
+- Real-time machine learning inference integrated into the live monitoring system
+- Event logging for fatigue and distraction incidents
+
+---
+
+## System Architecture
+
+![System Architecture](results/system_architecture.png)
 
 ---
 
@@ -22,8 +41,8 @@ The project uses OpenCV and MediaPipe Face Mesh for facial landmark tracking and
 
 ### Drowsiness Detection
 
-- Detects prolonged eye closure using EAR
-- Displays visual alerts when drowsiness is detected
+- Detects prolonged eye closure
+- Generates visual fatigue alerts
 - Supports audio warning notifications
 
 ### Distraction Detection
@@ -36,14 +55,14 @@ The project uses OpenCV and MediaPipe Face Mesh for facial landmark tracking and
 
 - Records fatigue and distraction events
 - Stores event timestamps in CSV format
-- Supports future analysis and model improvement
+- Enables future data analysis and evaluation
 
-### Machine Learning Pipeline
+### Machine Learning Classification
 
-- Custom dataset collection using webcam images
-- Feature extraction using MediaPipe Face Mesh
-- Training and evaluation of machine learning classifiers
-- Model persistence using Joblib
+- Custom dataset collection pipeline
+- Landmark-based feature extraction
+- Random Forest classifier training and evaluation
+- Real-time prediction using a trained machine learning model
 
 ---
 
@@ -81,14 +100,14 @@ AI-FATIGUE-MONITORING-SYSTEM
 │   └── landmark_driver_classifier.pkl
 │
 ├── results/
-│   ├── system_architecture.png
-│   └── fatigue_log.csv
+│   └── system_architecture.png
 │
 ├── scripts/
 │   ├── webcam_test.py
 │   ├── fatigue_detection.py
 │   ├── distraction_detection.py
 │   ├── live_monitoring.py
+│   ├── live_monitoring_v1.py
 │   ├── data_collection.py
 │   ├── train_classifier.py
 │   └── train_landmark_classifier.py
@@ -172,7 +191,7 @@ python scripts/train_landmark_classifier.py
 
 ## Dataset
 
-A custom dataset was collected using webcam images during project development.
+A custom driver-state dataset was collected using webcam images during project development.
 
 ### Dataset Summary
 
@@ -186,54 +205,37 @@ A custom dataset was collected using webcam images during project development.
 
 ---
 
-## Machine Learning Experiments
+## Machine Learning Pipeline
 
-Two machine learning approaches were evaluated.
+### Dataset Collection
 
-### 1. Image-Based Classifier
+A custom dataset was created by capturing webcam images across four driver states:
 
-**Features**
+- Alert
+- Drowsy
+- Looking Left
+- Looking Right
 
-- 64 × 64 RGB images
-- Pixel-based representation
+### Feature Engineering
 
-**Model**
-
-- Random Forest Classifier
-
-**Results**
-
-| Metric | Score |
-|----------|----------:|
-| Accuracy | 100% |
-| Precision | 100% |
-| Recall | 100% |
-| F1 Score | 100% |
-
-Saved Model:
-
-```text
-models/driver_state_classifier.pkl
-```
-
----
-
-### 2. Landmark-Based Classifier
-
-**Features**
+The landmark-based classifier uses facial landmark features extracted from MediaPipe Face Mesh:
 
 - Eye Aspect Ratio (EAR)
-- Head Pose Offset
-- Facial Landmark Geometry
-- Nose Position
-- Eye Landmark Positions
-- Mouth Landmark Position
+- Head Direction Offset
+- Nose Coordinates
+- Left Eye Coordinates
+- Right Eye Coordinates
+- Mouth Coordinates
 
-**Model**
+### Model Training
+
+Algorithm:
 
 - Random Forest Classifier
 
-**Results**
+### Model Evaluation
+
+The landmark-based model was evaluated on a held-out test set.
 
 | Metric | Score |
 |----------|----------:|
@@ -242,11 +244,28 @@ models/driver_state_classifier.pkl
 | Recall | 93% |
 | F1 Score | 93% |
 
-Saved Model:
+### Trained Models
 
 ```text
+models/driver_state_classifier.pkl
 models/landmark_driver_classifier.pkl
 ```
+
+---
+
+## Technical Highlights
+
+- Real-time computer vision pipeline
+- Facial landmark extraction using MediaPipe Face Mesh
+- Eye Aspect Ratio (EAR) computation
+- Head pose estimation
+- Driver distraction detection
+- Fatigue detection
+- Dataset collection and labeling
+- Machine learning model training
+- Model evaluation and deployment
+- Real-time ML inference
+- Event logging and monitoring
 
 ---
 
@@ -272,12 +291,27 @@ models/landmark_driver_classifier.pkl
 
 ## Future Improvements
 
-- Integrate the landmark-based classifier into the live monitoring pipeline
-- Expand the dataset with additional participants
-- Perform cross-subject evaluation
-- Investigate deep learning approaches
-- Develop a real-time driver analytics dashboard
-- Deploy the system on embedded hardware
+- Expand the dataset with multiple participants
+- Improve left/right classification robustness
+- Explore deep learning architectures
+- Deploy on embedded hardware platforms
+- Build a driver analytics dashboard
+- Evaluate performance under varying lighting conditions
+- Integrate cloud-based event logging
+
+---
+
+## Summary
+
+This project demonstrates the complete machine learning lifecycle:
+
+1. Data Collection
+2. Feature Engineering
+3. Model Training
+4. Model Evaluation
+5. Real-Time Deployment
+
+The system combines computer vision and machine learning techniques to perform real-time driver monitoring, fatigue detection, and distraction analysis using a webcam.
 
 ---
 
