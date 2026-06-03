@@ -6,14 +6,6 @@ import threading
 import os
 import csv
 from datetime import datetime
-import joblib
-
-# ---------------------------------------------------
-# Load Landmark Classifier
-# ---------------------------------------------------
-model = joblib.load(
-    "models/landmark_driver_classifier.pkl"
-)
 
 # ---------------------------------------------------
 # Audio Alert Function
@@ -84,9 +76,6 @@ RIGHT_EYE = [362, 385, 387, 263, 373, 380]
 NOSE_TIP = 1
 LEFT_FACE = 234
 RIGHT_FACE = 454
-LEFT_EYE_CENTER = 33
-RIGHT_EYE_CENTER = 263
-MOUTH_CENTER = 13
 
 # ---------------------------------------------------
 # Fatigue Detection Settings
@@ -243,44 +232,13 @@ while True:
 
             direction_offset = nose_x - face_center
 
-            nose_x_norm = face_landmarks.landmark[NOSE_TIP].x
-            nose_y_norm = face_landmarks.landmark[NOSE_TIP].y
-
-            left_eye_x = face_landmarks.landmark[LEFT_EYE_CENTER].x
-            left_eye_y = face_landmarks.landmark[LEFT_EYE_CENTER].y
-
-            right_eye_x = face_landmarks.landmark[RIGHT_EYE_CENTER].x
-            right_eye_y = face_landmarks.landmark[RIGHT_EYE_CENTER].y
-
-            mouth_x = face_landmarks.landmark[MOUTH_CENTER].x
-            mouth_y = face_landmarks.landmark[MOUTH_CENTER].y
-
-            features = [[
-                avg_ear,
-                direction_offset / frame_width,
-                nose_x_norm,
-                nose_y_norm,
-                left_eye_x,
-                left_eye_y,
-                right_eye_x,
-                right_eye_y,
-                mouth_x,
-                mouth_y
-            ]]
-
-            prediction = model.predict(features)[0]
-            if prediction == "looking_left":
-                prediction = "looking_right"
-
-            elif prediction == "looking_right":
-                prediction = "looking_left"
             cv2.putText(
                 frame,
-                f"ML: {prediction}",
-                (20, 120),
+                f"Offset: {direction_offset}",
+                (20, 80),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1,
-                (255, 255, 255),
+                (255, 255, 0),
                 2
             )
 
